@@ -1,48 +1,25 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "myapp"          // name for the Docker image
-        CONTAINER_NAME = "myapp-container"
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                // Clone source code from GitHub
-                git branch: 'main', url: 'https://github.com/gowdamanu12/Jenkins-Github-Docker.git'
+                git branch: 'main',
+                    url: 'https://github.com/gowdamanu12/ultimate-devops-project-demo.git'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('List Files') {
             steps {
-                script {
-                    echo "Building Docker image..."
-                    sh 'docker build -t ${IMAGE_NAME}:latest .'
-                }
+                sh 'echo "Listing project files:"'
+                sh 'ls -R'
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Build') {
             steps {
-                script {
-                    echo "Running Docker container..."
-                    // Stop and remove old container if exists
-                    sh """
-                    docker rm -f ${CONTAINER_NAME} || true
-                    docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${IMAGE_NAME}:latest
-                    """
-                }
+                sh 'echo "Build stage executed successfully!"'
             }
-        }
-    }
-
-    post {
-        success {
-            echo '✅ Build and container run successful!'
-        }
-        failure {
-            echo '❌ Build failed!'
         }
     }
 }
